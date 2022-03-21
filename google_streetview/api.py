@@ -68,6 +68,8 @@ class results:
   def __init__(
     self,
     params,
+    coordinates,
+    heading,
     site_api='https://maps.googleapis.com/maps/api/streetview',
     site_metadata='https://maps.googleapis.com/maps/api/streetview/metadata'):
     
@@ -80,6 +82,8 @@ class results:
         if k not in params[i]:
           params[i][k] = defaults[k]
     self.params = params
+    self.coordinates = coordinates
+    self.heading = heading
     
     # (image) Create image api links from parameters
     self.links = [site_api + '?' + urlencode(p) for p in params]
@@ -108,7 +112,7 @@ class results:
     # (download) Download images if status from metadata is ok
     for i, url in enumerate(self.links):
       if metadata[i][metadata_status] == status_ok:
-        file_path = path.join(dir_path, 'gsv_' + str(i) + '.jpg')
+        file_path = path.join(dir_path, coordinates + "_" + str(heading) + '.jpg')
         metadata[i]['_file'] = path.basename(file_path) # add file reference
         helpers.download(url, file_path)
     
